@@ -60,5 +60,7 @@
     "webpack-merge": "4.1.0",
     "zone.js": "0.8.12"
   },
-  "dependencies": {}
+  "dependencies": {
+    "ng2-toasty": "^2.5.0"
+  }
 }
