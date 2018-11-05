@@ -1,3 +1,5 @@
+import { AppErrorHandler } from './app.error-handler';
+import { ErrorHandler } from '@angular/core';
 import { VehicleService } from './services/vehicle.service';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -37,6 +39,7 @@ import { VehicleFormComponent } from './components/vehicle-form/vehicle-form.com
         ])
     ],
     providers: [
+        { provide: ErrorHandler, useClass: AppErrorHandler },
         VehicleService
     ]
 })
