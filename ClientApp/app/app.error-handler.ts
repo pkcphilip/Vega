@@ -9,16 +9,20 @@ export class AppErrorHandler implements ErrorHandler {
     }
 
     handleError(error: any): void {
-        Raven.captureException(error.originalError || error);
+        // Raven.captureException(error.originalError || error);
         
+
+
         this.ngZone.run(() => {
-            this.toastyService.error({
+            if (typeof(window) !== 'undefined') {
+                this.toastyService.error({
                 title: 'Error',
-                msg: 'An unexpected error happened.',
-                theme: 'bootstrap',
+                msg: 'An unexpected error happened',
+                theme: 'bootstrap', 
                 showClose: true,
                 timeout: 5000
-            });
+                });
+            }
         });
     }
 }
