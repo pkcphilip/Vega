@@ -45,6 +45,8 @@ export class VehicleFormComponent implements OnInit {
       this.vehicleService.getFeatures()
     ];
 
+    console.log(this.vehicle);
+
     if (this.vehicle.id)
       sources.push(this.vehicleService.getVehicle(this.vehicle.id));
 
@@ -52,6 +54,7 @@ export class VehicleFormComponent implements OnInit {
       this.makes = data[0];
       this.features = data[1];
 
+      console.log(this.vehicle);
       if (this.vehicle.id) {
         this.setVehicle(data[2]);
         this.populateModels();        
@@ -92,9 +95,22 @@ export class VehicleFormComponent implements OnInit {
   }
 
   submit() {
-    this.vehicleService.create(this.vehicle)
-    .subscribe(
-      x => console.log(x));
+    if (this.vehicle.id) {
+      this.vehicleService.update(this.vehicle)
+        .subscribe(x => {
+          this.toastyService.success({
+            title: 'Success', 
+            msg: 'The vehicle was sucessfully updated.',
+            theme: 'bootstrap',
+            showClose: true,
+            timeout: 5000
+          });
+        });
+    }
+    else {
+      this.vehicleService.create(this.vehicle)
+        .subscribe(x => console.log(x));
+     }
   }
 
   delete() {
