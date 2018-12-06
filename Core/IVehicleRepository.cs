@@ -1,17 +1,18 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using vega.Core.Models;
 using vega.Models;
 
 namespace vega.Core
 {
     public interface IVehicleRepository
     {
-         Task<Vehicle> GetVehicle(int id, bool includeRelated = true);
+         Task<T> GetVehicle(int id, bool includeRelated = true);
 
-         void Add(Vehicle vehicle);
+         void Add(T vehicle);
 
-         void Remove(Vehicle vehicle);
+         void Remove(T vehicle);
          
-         Task<IEnumerable<Vehicle>> GetVehicles();
+         Task<IEnumerable<T>> GetVehicles(VehicleQuery filter);
     }
 }

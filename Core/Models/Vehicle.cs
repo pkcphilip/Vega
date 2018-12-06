@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace vega.Models
 {
     [Table("Vehicles")]
-    public class Vehicle
+    public class T
     {
         public int Id { get; set; }
 
@@ -32,7 +32,7 @@ namespace vega.Models
 
         public ICollection<VehicleFeature> Features { get; set; }
 
-        public Vehicle()
+        public T()
         {
             Features = new Collection<VehicleFeature>();
         }

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using vega.Controllers.Resources;
 using vega.Core;
+using vega.Core.Models;
 using vega.Models;
 using vega.Persistence;
 
@@ -28,19 +29,17 @@ namespace vega.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateVehicle([FromBody] SaveVehicleResource vehicleResource)
         {
-            throw new Exception();
-
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var vehicle = mapper.Map<SaveVehicleResource, Vehicle>(vehicleResource);
+            var vehicle = mapper.Map<SaveVehicleResource, T>(vehicleResource);
             vehicle.LastUpdate = DateTime.Now;
             repository.Add(vehicle);
             await unitOfWork.CompleteAsync();
 
             vehicle = await repository.GetVehicle(vehicle.Id);
 
-            var result = mapper.Map<Vehicle, VehicleResource>(vehicle);
+            var result = mapper.Map<T, VehicleResource>(vehicle);
 
             return Ok(result);
         }
@@ -56,12 +55,12 @@ namespace vega.Controllers
             if (vehicle == null)
                 return NotFound();
 
-            mapper.Map<SaveVehicleResource, Vehicle>(vehicleResource, vehicle);
+            mapper.Map<SaveVehicleResource, T>(vehicleResource, vehicle);
             vehicle.LastUpdate = DateTime.Now;
             await unitOfWork.CompleteAsync();
 
             vehicle = await repository.GetVehicle(vehicle.Id);
-            var result = mapper.Map<Vehicle, VehicleResource>(vehicle);
+            var result = mapper.Map<T, VehicleResource>(vehicle);
 
             return Ok(result);
         }
@@ -88,16 +87,17 @@ namespace vega.Controllers
             if (vehicle == null)
                 return NotFound();
 
-            var vehicleResource = mapper.Map<Vehicle, VehicleResource>(vehicle);
+            var vehicleResource = mapper.Map<T, VehicleResource>(vehicle);
             return Ok(vehicleResource);
         }
 
         [HttpGet]
-        public async Task<IEnumerable<VehicleResource>> GetVehicles()
+        public async Task<IEnumerable<VehicleResource>> GetVehicles(VehicleQueryResource filterResource)
         {
-            var vehicles = await repository.GetVehicles();
+            var filter = mapper.Map<VehicleQueryResource, VehicleQuery>(filterResource);
+            var vehicles = await repository.GetVehicles(filter);
 
-            return mapper.Map<IEnumerable<Vehicle>, IEnumerable<VehicleResource>>(vehicles);
+            return mapper.Map<IEnumerable<T>, IEnumerable<VehicleResource>>(vehicles);
         }
     }
 }
