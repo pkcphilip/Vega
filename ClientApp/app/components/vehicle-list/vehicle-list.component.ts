@@ -8,9 +8,12 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./vehicle-list.component.css']
 })
 export class VehicleListComponent implements OnInit {
+  queryResult: any = {};
   vehicles: Vehicle[] = [];
   makes: KeyValuePair[] = [];
-  query: any = {};
+  query: any = {
+    pageSize: 3
+  };
   columns = [
     { title: 'Id' },
     { title: 'Make', key: 'make', isSortable: true },
@@ -30,7 +33,7 @@ export class VehicleListComponent implements OnInit {
 
   private populateVehicles() {
     this.vehicleService.getVehicles(this.query)
-      .subscribe(vehicles => this.vehicles = vehicles);
+      .subscribe(result => this.queryResult = result);
   }
 
   onFilterChange() {
@@ -49,6 +52,11 @@ export class VehicleListComponent implements OnInit {
       this.query.sortBy = columnName;
       this.query.isSortAscending = true
     }
+    this.populateVehicles();
+  }
+
+  onPageChange(page: any) {
+    this.query.page = page;
     this.populateVehicles();
   }
 }

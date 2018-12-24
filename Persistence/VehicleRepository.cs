@@ -1,12 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using vega.Models;
 using System.Threading.Tasks;
-using vega.Core;
 using System.Collections.Generic;
-using vega.Core.Models;
 using System.Linq;
 using System;
 using System.Linq.Expressions;
+using vega.Core;
+using vega.Core.Models;
 using vega.Extensions;
 
 namespace vega.Persistence
@@ -20,7 +20,7 @@ namespace vega.Persistence
             this.context = context;
         }
 
-        public async Task<T> GetVehicle(int id, bool includeRelated = true)
+        public async Task<Vehicle> GetVehicle(int id, bool includeRelated = true)
         {
             if (!includeRelated)
                 return await context.Vehicles.FindAsync(id);
@@ -33,8 +33,10 @@ namespace vega.Persistence
                 .SingleOrDefaultAsync(v => v.Id == id);
         }
 
-        public async Task<IEnumerable<T>> GetVehicles(VehicleQuery queryObj)
+        public async Task<QueryResult<Vehicle>> GetVehicles(VehicleQuery queryObj)
         {
+            var result = new QueryResult<Vehicle>();
+
             var query = context.Vehicles
                 .Include(v => v.Features)
                     .ThenInclude(vf => vf.Feature)
@@ -45,7 +47,7 @@ namespace vega.Persistence
             if (queryObj.MakeId.HasValue)
                 query = query.Where(v => v.Model.MakeId == queryObj.MakeId);
             
-            var columnsMap = new Dictionary<string, Expression<Func<T, object>>>() {
+            var columnsMap = new Dictionary<string, Expression<Func<Vehicle, object>>>() {
                 ["make"] = v => v.Model.Make.Name,
                 ["model"] = v => v.Model.Name,
                 ["contactName"] = v => v.ContactName
@@ -53,18 +55,22 @@ namespace vega.Persistence
 
             query = query.ApplyOrdering(queryObj, columnsMap);
 
+            result.TotalItems = await query.CountAsync();
+
             query = query.ApplyPaging(queryObj);
 
-            return await query.ToListAsync();
+            result.Items = await query.ToListAsync();
+
+            return result;
         }
 
 
-        public void Add(T vehicle)
+        public void Add(Vehicle vehicle)
         {
             context.Vehicles.Add(vehicle);
         }
 
-        public void Remove(T vehicle)
+        public void Remove(Vehicle vehicle)
         {
             context.Remove(vehicle);
         }

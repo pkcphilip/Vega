@@ -9,8 +9,8 @@ namespace vega.Extensions
 {
     public static class IQueryableExtensions
     {
-        public static IQueryable<T> ApplyOrdering(this IQueryable<T> query, IQueryObject queryObj,  
-            Dictionary<string, Expression<Func<T, object>>> columnsMap) 
+        public static IQueryable<Vehicle> ApplyOrdering(this IQueryable<Vehicle> query, IQueryObject queryObj,  
+            Dictionary<string, Expression<Func<Vehicle, object>>> columnsMap) 
         {
             if (string.IsNullOrWhiteSpace(queryObj.SortBy) || !columnsMap.ContainsKey(queryObj.SortBy))
                 return query;

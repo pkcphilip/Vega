@@ -7,12 +7,12 @@ namespace vega.Core
 {
     public interface IVehicleRepository
     {
-         Task<T> GetVehicle(int id, bool includeRelated = true);
+         Task<Vehicle> GetVehicle(int id, bool includeRelated = true);
 
-         void Add(T vehicle);
+         void Add(Vehicle vehicle);
 
-         void Remove(T vehicle);
+         void Remove(Vehicle vehicle);
          
-         Task<IEnumerable<T>> GetVehicles(VehicleQuery filter);
+         Task<QueryResult<Vehicle>> GetVehicles(VehicleQuery filter);
     }
 }
