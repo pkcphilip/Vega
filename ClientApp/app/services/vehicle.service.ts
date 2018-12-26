@@ -26,7 +26,7 @@ export class VehicleService {
   }
 
   getVehicle(id: number) {
-    return this.http.get(this.vehiclesEndpoint + id)
+    return this.http.get(this.vehiclesEndpoint + '/' + id)
       .map(res => res.json());
   }
 
@@ -51,7 +51,7 @@ export class VehicleService {
   }
 
   delete(id: number) {
-    return this.http.delete(this.vehiclesEndpoint + id)
+    return this.http.delete(this.vehiclesEndpoint + '/' + id)
       .map(res => res.json());
   }
 }
