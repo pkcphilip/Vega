@@ -8,11 +8,13 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./vehicle-list.component.css']
 })
 export class VehicleListComponent implements OnInit {
+  private readonly PAGE_SIZE = 3;
+
   queryResult: any = {};
   vehicles: Vehicle[] = [];
   makes: KeyValuePair[] = [];
   query: any = {
-    pageSize: 3
+    pageSize: this.PAGE_SIZE
   };
   columns = [
     { title: 'Id' },
@@ -37,12 +39,16 @@ export class VehicleListComponent implements OnInit {
   }
 
   onFilterChange() {
+    this.query.page = 1;
     this.populateVehicles();
   }
 
   resetFilter() {
-    this.query = {};
-    this.onFilterChange();
+    this.query = {
+      page: 1,
+      pageSize: this.PAGE_SIZE
+    };
+    this.populateVehicles();
   }
 
   sortBy(columnName: string) {
